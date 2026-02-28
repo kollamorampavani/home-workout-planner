@@ -74,10 +74,10 @@ const Dashboard = () => {
                         animate={{ opacity: 1, x: 0 }}
                         className="space-y-4"
                     >
-                        <h1 className="text-4xl md:text-5xl font-black text-white">
+                        <h1 className="text-3xl md:text-4xl font-black text-white">
                             {greeting}, <span className="gradient-text">{user?.name?.split(' ')[0]}</span>! 👋
                         </h1>
-                        <p className="text-xl text-slate-400 max-w-lg leading-relaxed">
+                        <p className="text-lg text-slate-400 max-w-lg leading-relaxed">
                             You're currently focusing on <span className="text-primary font-bold">{user?.goal || 'General Fitness'}</span>.
                             Ready to push your limits today?
                         </p>
@@ -110,8 +110,8 @@ const Dashboard = () => {
                         <div className="space-y-1">
                             <p className="text-xs font-bold text-slate-400 uppercase">Community Points</p>
                             <div className="flex items-end gap-2">
-                                <span className="text-4xl font-black text-primary">{user?.points || 0}</span>
-                                <span className="text-xs text-slate-500 font-bold mb-2">PTS</span>
+                                <span className="text-3xl font-black text-primary">{user?.points || 0}</span>
+                                <span className="text-[10px] text-slate-500 font-bold mb-1">PTS</span>
                             </div>
                         </div>
                         <div className="mt-6 pt-6 border-t border-white/5 flex gap-4">
@@ -144,7 +144,7 @@ const Dashboard = () => {
                                 <span className="px-3 py-1 bg-primary/20 text-primary text-[10px] font-black uppercase rounded-full tracking-tighter">
                                     Next for you
                                 </span>
-                                <h3 className="text-3xl font-black mt-4 group-hover:text-primary transition-colors">{recommendation.name}</h3>
+                                <h3 className="text-2xl font-black mt-4 group-hover:text-primary transition-colors">{recommendation.name}</h3>
                                 <div className="flex gap-4 mt-4">
                                     <div className="flex items-center gap-1.5 text-slate-400 text-sm font-medium">
                                         <Timer size={16} /> {recommendation.duration} min
@@ -157,9 +157,9 @@ const Dashboard = () => {
 
                             <Link
                                 to={`/workout/${recommendation.id}`}
-                                className="mt-8 btn-primary flex items-center justify-center gap-3 py-4 text-lg font-black group-hover:scale-105 transition-transform"
+                                className="mt-8 btn-primary flex items-center justify-center gap-2 py-3 text-base font-black group-hover:scale-105 transition-transform"
                             >
-                                <Play size={22} fill="white" />
+                                <Play size={18} fill="white" />
                                 START SESSION
                             </Link>
                         </div>

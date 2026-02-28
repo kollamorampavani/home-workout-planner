@@ -24,7 +24,7 @@
 }
 
 html {
-  font-size: 20px !important;
+  font-size: 16px !important;
 }
 
 body {
@@ -33,38 +33,39 @@ body {
   color: var(--text);
   min-height: 100vh;
   line-height: 1.6;
-  font-size: 22px !important;
-  /* Massive base font */
+  font-size: 1rem !important;
+  /* Normalized base font */
   -webkit-font-smoothing: antialiased;
 }
 
 h1 {
-  font-size: 54px !important;
-  margin-bottom: 24px;
+  font-size: 2.25rem !important;
+  margin-bottom: 1.5rem;
   font-weight: 700;
+  letter-spacing: -0.02em;
 }
 
 h2 {
-  font-size: 42px !important;
-  margin-bottom: 20px;
+  font-size: 1.875rem !important;
+  margin-bottom: 1.25rem;
   font-weight: 700;
 }
 
 h3 {
-  font-size: 34px !important;
-  margin-bottom: 16px;
+  font-size: 1.5rem !important;
+  margin-bottom: 1rem;
   font-weight: 600;
 }
 
 h4 {
-  font-size: 28px !important;
-  margin-bottom: 12px;
+  font-size: 1.25rem !important;
+  margin-bottom: 0.75rem;
   font-weight: 600;
 }
 
 p {
-  margin-bottom: 16px;
-  font-size: 22px !important;
+  margin-bottom: 1rem;
+  font-size: 1rem !important;
 }
 
 button,
@@ -72,7 +73,7 @@ input,
 select,
 textarea {
   font-family: inherit;
-  font-size: 22px !important;
+  font-size: 1rem !important;
 }
 
 /* Heading Utilities are now moved to primary tags above */
@@ -151,8 +152,8 @@ textarea {
 }
 
 .w-64 {
-  width: 320px !important;
-  /* Widened to match larger fonts */
+  width: 260px !important;
+  /* Normalized width */
 }
 
 .w-10 {
@@ -363,7 +364,7 @@ textarea {
 }
 
 .ml-64 {
-  margin-left: 320px !important;
+  margin-left: 260px !important;
 }
 
 .mt-1 {
@@ -509,18 +510,19 @@ textarea {
 
 .glass-card {
   background: var(--surface) !important;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid var(--border) !important;
-  border-radius: 20px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border) !important;
+  border-radius: 24px;
   padding: 1.5rem;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3);
 }
 
 .glass-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 30px -5px rgba(0, 0, 0, 0.5);
-  border-color: rgba(255, 255, 255, 0.2) !important;
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+  border-color: rgba(139, 92, 246, 0.3) !important;
 }
 
 .border-none {
@@ -685,39 +687,39 @@ textarea {
 }
 
 .text-xs {
-  font-size: 18px !important;
+  font-size: 0.75rem !important;
 }
 
 .text-sm {
-  font-size: 20px !important;
+  font-size: 0.875rem !important;
 }
 
 .text-base {
-  font-size: 22px !important;
+  font-size: 1rem !important;
 }
 
 .text-lg {
-  font-size: 26px !important;
+  font-size: 1.125rem !important;
 }
 
 .text-xl {
-  font-size: 32px !important;
+  font-size: 1.25rem !important;
 }
 
 .text-2xl {
-  font-size: 40px !important;
+  font-size: 1.5rem !important;
 }
 
 .text-3xl {
-  font-size: 50px !important;
+  font-size: 1.875rem !important;
 }
 
 .text-4xl {
-  font-size: 64px !important;
+  font-size: 2.25rem !important;
 }
 
 .text-8xl {
-  font-size: 120px !important;
+  font-size: 6rem !important;
 }
 
 .aspect-square {
@@ -829,43 +831,49 @@ textarea {
 
 /* Base Interactions */
 .btn-primary {
-  background: linear-gradient(135deg, var(--primary), #7c3aed) !important;
+  background: linear-gradient(135deg, var(--primary), #6d28d9) !important;
   color: white !important;
   border: none !important;
-  border-radius: 14px !important;
-  padding: 12px 28px !important;
-  font-weight: 700 !important;
+  border-radius: 12px !important;
+  padding: 10px 24px !important;
+  font-weight: 600 !important;
+  font-size: 0.9375rem !important;
   display: inline-flex !important;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  box-shadow: 0 4px 15px var(--primary-glow) !important;
+  box-shadow: 0 4px 12px var(--primary-glow) !important;
   text-decoration: none;
   cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4) !important;
+  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.5) !important;
+  filter: brightness(1.1);
 }
 
 .btn-secondary {
-  background: rgba(255, 255, 255, 0.05) !important;
+  background: rgba(255, 255, 255, 0.03) !important;
   color: white !important;
   border: 1px solid var(--border) !important;
-  border-radius: 14px !important;
-  padding: 12px 28px !important;
-  font-weight: 700 !important;
+  border-radius: 12px !important;
+  padding: 10px 24px !important;
+  font-weight: 600 !important;
+  font-size: 0.9375rem !important;
   display: inline-flex !important;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
   text-decoration: none;
   cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .btn-secondary:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.1) !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
 }
 
 /* Hover effects */

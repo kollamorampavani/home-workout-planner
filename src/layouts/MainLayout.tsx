@@ -38,8 +38,8 @@ const MainLayout = () => {
         <div className="flex min-h-screen bg-[#0f172a] text-white">
             {/* Sidebar */}
             <aside className="w-64 glass border-r border-[rgba(255,255,255,0.05)] flex flex-col fixed h-full z-50">
-                <div className="p-10">
-                    <h1 className="text-3xl font-bold gradient-text">FitVibe</h1>
+                <div className="p-6">
+                    <h1 className="text-2xl font-black gradient-text tracking-tighter">FitVibe</h1>
                 </div>
 
                 <nav className="flex-1 px-4 flex flex-col gap-2">
@@ -49,13 +49,13 @@ const MainLayout = () => {
                             <Link
                                 key={item.path}
                                 to={item.path}
-                                className={`flex items-center gap-4 px-6 py-4 rounded-xl transition-all ${isActive
+                                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${isActive
                                     ? 'bg-primary text-white shadow-lg shadow-primary-glow'
                                     : 'text-slate-400 hover:bg-slate-800 hover:text-white'
                                     }`}
                             >
-                                <item.icon size={26} />
-                                <span className="font-medium text-lg">{item.label}</span>
+                                <item.icon size={20} />
+                                <span className="font-medium text-base">{item.label}</span>
                             </Link>
                         );
                     })}
@@ -73,10 +73,10 @@ const MainLayout = () => {
                     </div>
                     <button
                         onClick={handleLogout}
-                        className="flex items-center gap-4 px-6 py-4 w-full text-slate-400 hover:text-danger hover:bg-danger/10 rounded-xl transition-all"
+                        className="flex items-center gap-3 px-4 py-3 w-full text-slate-400 hover:text-danger hover:bg-danger/10 rounded-xl transition-all"
                     >
-                        <LogOut size={26} />
-                        <span className="font-medium text-lg">Sign Out</span>
+                        <LogOut size={20} />
+                        <span className="font-medium text-base">Sign Out</span>
                     </button>
                 </div>
             </aside>
