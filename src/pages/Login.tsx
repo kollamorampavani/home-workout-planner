@@ -39,7 +39,8 @@ const Login = () => {
                 goal: data.user.fitness_goal,
                 level: data.user.fitness_level,
                 time: data.user.available_time,
-                onboarded: !!data.user.onboarded
+                onboarded: !!data.user.onboarded,
+                points: Number(data.user.points) || 0
             });
 
             toast.success(isLogin ? 'Welcome back!' : 'Account created successfully!');

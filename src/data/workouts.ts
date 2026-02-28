@@ -36,6 +36,6 @@ export const routines: Routine[] = [
     }
 ];
 
-export const getRoutineForUser = (goal: string, level: string, time: number) => {
+export const getRoutineForUser = (goal: string, level: string, _time: number) => {
     return routines.find(r => r.goal === goal && r.level === level) || routines[0];
 };
