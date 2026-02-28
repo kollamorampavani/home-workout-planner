@@ -1,0 +1,82 @@
+--- exercises ---
+CREATE TABLE `exercises` (
+  `id` varchar(50) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `description` text,
+  `category` enum('cardio','strength','yoga') DEFAULT NULL,
+  `muscle_groups` json DEFAULT NULL,
+  `equipment` enum('none','dumbbells','bands') DEFAULT NULL,
+  `video_url` varchar(255) DEFAULT NULL,
+  `intensity` enum('low','medium','high') DEFAULT NULL,
+  `default_reps` int DEFAULT NULL,
+  `default_sets` int DEFAULT NULL,
+  `default_duration` int DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+--- meal_diary ---
+CREATE TABLE `meal_diary` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int DEFAULT NULL,
+  `meal_name` varchar(255) DEFAULT NULL,
+  `calories` int DEFAULT NULL,
+  `protein` int DEFAULT NULL,
+  `carbs` int DEFAULT NULL,
+  `fat` int DEFAULT NULL,
+  `date` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `meal_diary_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+--- routine_exercises ---
+CREATE TABLE `routine_exercises` (
+  `routine_id` varchar(50) NOT NULL,
+  `exercise_id` varchar(50) NOT NULL,
+  `position` int DEFAULT NULL,
+  PRIMARY KEY (`routine_id`,`exercise_id`),
+  KEY `exercise_id` (`exercise_id`),
+  CONSTRAINT `routine_exercises_ibfk_1` FOREIGN KEY (`routine_id`) REFERENCES `routines` (`id`),
+  CONSTRAINT `routine_exercises_ibfk_2` FOREIGN KEY (`exercise_id`) REFERENCES `exercises` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+--- routines ---
+CREATE TABLE `routines` (
+  `id` varchar(50) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `goal` enum('strength','fat-loss','flexibility') DEFAULT NULL,
+  `level` enum('beginner','intermediate','advanced') DEFAULT NULL,
+  `duration` int DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+--- users ---
+CREATE TABLE `users` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `full_name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `fitness_goal` enum('strength','fat-loss','flexibility') DEFAULT NULL,
+  `fitness_level` enum('beginner','intermediate','advanced') DEFAULT NULL,
+  `available_time` int DEFAULT NULL,
+  `onboarded` tinyint(1) DEFAULT '0',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+--- workout_history ---
+CREATE TABLE `workout_history` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int DEFAULT NULL,
+  `routine_id` varchar(50) DEFAULT NULL,
+  `date` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `duration_mins` int DEFAULT NULL,
+  `calories_burned` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  KEY `routine_id` (`routine_id`),
+  CONSTRAINT `workout_history_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `workout_history_ibfk_2` FOREIGN KEY (`routine_id`) REFERENCES `routines` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+

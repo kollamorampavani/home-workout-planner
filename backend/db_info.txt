@@ -1,0 +1,39 @@
+TABLE: users
+  COLUMN: id, TYPE: int
+  COLUMN: full_name, TYPE: varchar(255)
+  COLUMN: email, TYPE: varchar(255)
+  COLUMN: password_hash, TYPE: varchar(255)
+  COLUMN: fitness_goal, TYPE: enum('strength','fat-loss','flexibility')
+  COLUMN: fitness_level, TYPE: enum('beginner','intermediate','advanced')
+  COLUMN: available_time, TYPE: int
+  COLUMN: onboarded, TYPE: tinyint(1)
+  COLUMN: created_at, TYPE: timestamp
+TABLE: exercises
+  COLUMN: id, TYPE: varchar(50)
+  COLUMN: name, TYPE: varchar(255)
+  COLUMN: description, TYPE: text
+  COLUMN: category, TYPE: enum('cardio','strength','yoga')
+  COLUMN: muscle_groups, TYPE: json
+  COLUMN: equipment, TYPE: enum('none','dumbbells','bands')
+  COLUMN: video_url, TYPE: varchar(255)
+  COLUMN: intensity, TYPE: enum('low','medium','high')
+  COLUMN: default_reps, TYPE: int
+  COLUMN: default_sets, TYPE: int
+  COLUMN: default_duration, TYPE: int
+TABLE: routines
+  COLUMN: id, TYPE: varchar(50)
+  COLUMN: name, TYPE: varchar(255)
+  COLUMN: goal, TYPE: enum('strength','fat-loss','flexibility')
+  COLUMN: level, TYPE: enum('beginner','intermediate','advanced')
+  COLUMN: duration, TYPE: int
+TABLE: routine_exercises
+  COLUMN: routine_id, TYPE: varchar(50)
+  COLUMN: exercise_id, TYPE: varchar(50)
+  COLUMN: position, TYPE: int
+TABLE: workout_history
+  COLUMN: id, TYPE: int
+  COLUMN: user_id, TYPE: int
+  COLUMN: routine_id, TYPE: varchar(50)
+  COLUMN: date, TYPE: timestamp
+  COLUMN: duration_mins, TYPE: int
+  COLUMN: calories_burned, TYPE: int
