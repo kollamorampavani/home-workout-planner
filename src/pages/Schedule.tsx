@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
     ChevronLeft,
     ChevronRight,
@@ -289,7 +290,7 @@ const Schedule = () => {
                             )) : (
                                 <div className="text-center py-12">
                                     <p className="text-slate-500">No activities scheduled for this day.</p>
-                                    <button className="btn-primary mt-4 scale-90">Schedule Something</button>
+                                    <Link to="/workouts" className="btn-primary mt-4 scale-90 inline-block">Schedule Something</Link>
                                 </div>
                             )}
                         </div>
