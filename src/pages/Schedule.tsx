@@ -30,14 +30,69 @@ const Schedule = () => {
     const [selectedDate, setSelectedDate] = useState(new Date());
     const today = new Date();
 
+    // Custom Activities State
+    const [customActivities, setCustomActivities] = useState<Record<string, ScheduledEvent[]>>(() => {
+        const saved = localStorage.getItem('custom_activities');
+        return saved ? JSON.parse(saved) : {};
+    });
+
+    // Add Activity Modal State
+    const [isAddingActivity, setIsAddingActivity] = useState(false);
+    const [newActivity, setNewActivity] = useState({
+        title: '',
+        time: '08:00 AM',
+        type: 'workout',
+        color: 'bg-primary'
+    });
+
+    const saveCustomActivity = () => {
+        if (!newActivity.title) {
+            toast.error('Please enter an activity name');
+            return;
+        }
+
+        const dateKey = selectedDate.toDateString();
+        const activity: ScheduledEvent = {
+            id: Date.now(),
+            ...newActivity
+        };
+
+        const updated = {
+            ...customActivities,
+            [dateKey]: [...(customActivities[dateKey] || []), activity]
+        };
+
+        setCustomActivities(updated);
+        localStorage.setItem('custom_activities', JSON.stringify(updated));
+        toast.success(`Scheduled ${newActivity.title}`);
+        setIsAddingActivity(false);
+        setNewActivity({ title: '', time: '08:00 AM', type: 'workout', color: 'bg-primary' });
+    };
+
+    const deleteActivity = (id: number) => {
+        const dateKey = selectedDate.toDateString();
+        const updated = {
+            ...customActivities,
+            [dateKey]: customActivities[dateKey].filter(a => a.id !== id)
+        };
+        setCustomActivities(updated);
+        localStorage.setItem('custom_activities', JSON.stringify(updated));
+        toast.success('Activity removed');
+    };
+
     // Notes Modal State
     const [activeEvent, setActiveEvent] = useState<ScheduledEvent | null>(null);
-    const [notes, setNotes] = useState<Record<number, string>>({});
+    const [notes, setNotes] = useState<Record<number, string>>(() => {
+        const saved = localStorage.getItem('schedule_notes');
+        return saved ? JSON.parse(saved) : {};
+    });
     const [tempNote, setTempNote] = useState('');
 
     const saveNote = () => {
         if (activeEvent) {
-            setNotes({ ...notes, [activeEvent.id]: tempNote });
+            const updatedNotes = { ...notes, [activeEvent.id]: tempNote };
+            setNotes(updatedNotes);
+            localStorage.setItem('schedule_notes', JSON.stringify(updatedNotes));
             toast.success(`Note saved for ${activeEvent.title}`);
             setActiveEvent(null);
         }
@@ -120,19 +175,28 @@ const Schedule = () => {
             ]
         };
 
-        switch (dayOfWeek) {
-            case 1: // Mon
-            case 3: // Wed
-            case 5: // Fri
-                return plans.strength;
-            case 2: // Tue
-            case 4: // Thu
-                return plans.cardio;
-            case 6: // Sat
-                return plans.recovery;
-            default: // Sun (Rest)
-                return [];
-        }
+        const staticEvents = (() => {
+            switch (dayOfWeek) {
+                case 1: // Mon
+                case 3: // Wed
+                case 5: // Fri
+                    return plans.strength;
+                case 2: // Tue
+                case 4: // Thu
+                    return plans.cardio;
+                case 6: // Sat
+                    return plans.recovery;
+                default: // Sun (Rest)
+                    return [];
+            }
+        })();
+
+        const userEvents = customActivities[date.toDateString()] || [];
+        return [...staticEvents, ...userEvents].sort((a, b) => {
+            const timeA = new Date(`1970/01/01 ${a.time}`).getTime();
+            const timeB = new Date(`1970/01/01 ${b.time}`).getTime();
+            return timeA - timeB;
+        });
     };
 
     const currentEvents = getEventsForDate(selectedDate);
@@ -237,8 +301,17 @@ const Schedule = () => {
                     <div className="glass-card">
                         <div className="flex justify-between items-center mb-6">
                             <h3 className="text-xl font-bold">Time Blocking Plan</h3>
-                            <span className="text-sm font-bold text-primary px-3 py-1 bg-primary/10 rounded-full">
-                                {selectedDate.toLocaleDateString('default', { month: 'short', day: 'numeric' })}
+                            <button
+                                onClick={() => setIsAddingActivity(true)}
+                                className="text-sm font-bold text-primary flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 rounded-xl hover:bg-primary/20 transition-all"
+                            >
+                                <Plus size={16} /> Schedule Activity
+                            </button>
+                        </div>
+                        <div className="flex items-center gap-2 mb-6">
+                            <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">Selected Date:</span>
+                            <span className="text-sm font-bold text-white px-3 py-1 bg-slate-800 rounded-full border border-white/5">
+                                {selectedDate.toLocaleDateString('default', { month: 'short', day: 'numeric', year: 'numeric' })}
                             </span>
                         </div>
                         <div className="space-y-4">
@@ -267,6 +340,18 @@ const Schedule = () => {
                                             <button
                                                 onClick={(e) => {
                                                     e.stopPropagation();
+                                                    if (confirm('Remove this activity from your schedule?')) {
+                                                        deleteActivity(event.id);
+                                                    }
+                                                }}
+                                                className="p-2 hover:bg-danger/10 rounded-lg transition-colors group/del"
+                                                title="Remove Activity"
+                                            >
+                                                <X size={18} className="text-slate-600 group-hover/del:text-danger transition-colors" />
+                                            </button>
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
                                                     addToCalendar(event as ScheduledEvent);
                                                 }}
                                                 className="p-2 hover:bg-primary/10 rounded-lg transition-colors group/cal"
@@ -281,16 +366,25 @@ const Schedule = () => {
                                                     setTempNote(notes[event.id] || '');
                                                 }}
                                                 className="p-2 hover:bg-primary/10 rounded-lg transition-colors group/btn"
+                                                title="Add Notes"
                                             >
-                                                <Plus size={20} className="text-slate-600 group-hover/btn:text-primary transition-colors" />
+                                                <FileText size={20} className="text-slate-600 group-hover/btn:text-primary transition-colors" />
                                             </button>
                                         </div>
                                     </div>
                                 </div>
                             )) : (
                                 <div className="text-center py-12">
-                                    <p className="text-slate-500">No activities scheduled for this day.</p>
-                                    <Link to="/workouts" className="btn-primary mt-4 scale-90 inline-block">Schedule Something</Link>
+                                    <p className="text-slate-500 mb-6">No activities scheduled for this day.</p>
+                                    <button
+                                        onClick={() => setIsAddingActivity(true)}
+                                        className="btn-primary flex items-center gap-2 mx-auto"
+                                    >
+                                        <Plus size={18} /> Schedule Custom Activity
+                                    </button>
+                                    <div className="mt-4">
+                                        <Link to="/workouts" className="text-sm font-bold text-primary hover:underline">Or explore routines</Link>
+                                    </div>
                                 </div>
                             )}
                         </div>
@@ -400,6 +494,96 @@ const Schedule = () => {
                                         className="flex-1 px-6 py-3 rounded-xl bg-primary hover:bg-primary-hover text-white font-bold shadow-lg shadow-primary-glow transition-all"
                                     >
                                         Save Note
+                                    </button>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
+            {/* Add Activity Modal */}
+            <AnimatePresence>
+                {isAddingActivity && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                            className="glass-card w-full max-w-md p-0 overflow-hidden shadow-2xl border-white/10"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <div className="p-6 border-b border-white/5 flex justify-between items-center bg-slate-900/50">
+                                <h3 className="text-xl font-bold flex items-center gap-2">
+                                    <Calendar className="text-primary" size={20} /> Schedule Activity
+                                </h3>
+                                <button
+                                    onClick={() => setIsAddingActivity(false)}
+                                    className="p-2 hover:bg-slate-800 rounded-lg text-slate-400 transition-colors"
+                                >
+                                    <X size={20} />
+                                </button>
+                            </div>
+
+                            <div className="p-6 space-y-5">
+                                <div>
+                                    <label className="block text-xs font-bold text-slate-500 uppercase mb-2 tracking-widest">Activity Name</label>
+                                    <input
+                                        type="text"
+                                        placeholder="e.g., Morning Run, Leg Day..."
+                                        value={newActivity.title}
+                                        onChange={(e) => setNewActivity({ ...newActivity, title: e.target.value })}
+                                        className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary/50 transition-colors"
+                                        autoFocus
+                                    />
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-xs font-bold text-slate-500 uppercase mb-2 tracking-widest">Time</label>
+                                        <select
+                                            value={newActivity.time}
+                                            onChange={(e) => setNewActivity({ ...newActivity, time: e.target.value })}
+                                            className="w-full bg-slate-900 text-white rounded-xl px-4 py-3 border border-white/10 focus:outline-none focus:border-primary/50"
+                                        >
+                                            {Array.from({ length: 24 }).map((_, i) => {
+                                                const hour = i % 12 || 12;
+                                                const ampm = i < 12 ? 'AM' : 'PM';
+                                                const timeStr = `${hour.toString().padStart(2, '0')}:00 ${ampm}`;
+                                                return <option key={i} value={timeStr}>{timeStr}</option>;
+                                            })}
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-bold text-slate-500 uppercase mb-2 tracking-widest">Category</label>
+                                        <div className="grid grid-cols-2 gap-2">
+                                            <button
+                                                onClick={() => setNewActivity({ ...newActivity, type: 'workout', color: 'bg-primary' })}
+                                                className={`py-2 rounded-lg text-xs font-bold border ${newActivity.type === 'workout' ? 'bg-primary border-primary' : 'bg-slate-800 border-transparent hover:border-slate-600'}`}
+                                            >
+                                                Workout
+                                            </button>
+                                            <button
+                                                onClick={() => setNewActivity({ ...newActivity, type: 'meal', color: 'bg-orange-500' })}
+                                                className={`py-2 rounded-lg text-xs font-bold border ${newActivity.type === 'meal' ? 'bg-orange-500 border-orange-500' : 'bg-slate-800 border-transparent hover:border-slate-600'}`}
+                                            >
+                                                Meal
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="pt-4 flex gap-4">
+                                    <button
+                                        onClick={() => setIsAddingActivity(false)}
+                                        className="flex-1 px-6 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold transition-all"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        onClick={saveCustomActivity}
+                                        className="flex-1 px-6 py-3 rounded-xl bg-primary hover:bg-primary-hover text-white font-bold shadow-lg shadow-primary-glow transition-all"
+                                    >
+                                        Schedule
                                     </button>
                                 </div>
                             </div>
