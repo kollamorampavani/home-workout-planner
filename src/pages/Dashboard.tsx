@@ -70,26 +70,29 @@ const Dashboard = () => {
                 <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-[100px] -mr-48 -mt-48" />
                 <div className="absolute bottom-0 left-0 w-64 h-64 bg-accent/10 rounded-full blur-[80px] -ml-32 -mb-32" />
 
-                <div className="relative z-10 md:flex justify-between items-center gap-8">
+                <div className="relative z-10 lg:flex items-center gap-12 lg:gap-20">
                     <motion.div
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
-                        className="space-y-4"
+                        className="flex-1 space-y-6"
                     >
-                        <h1 className="text-2xl md:text-3xl lg:text-4xl font-black text-white leading-tight">
-                            {greeting}, <span className="gradient-text">{user?.name?.split(' ')[0]}</span>! 👋
+                        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/20 text-primary text-[10px] font-black uppercase rounded-full tracking-widest border border-primary/20">
+                            <Star size={12} className="fill-current" /> Daily Update
+                        </div>
+                        <h1 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight">
+                            {greeting}, <br /><span className="gradient-text">{user?.name?.split(' ')[0]}</span>! 👋
                         </h1>
-                        <p className="text-base md:text-lg text-slate-400 max-w-lg leading-relaxed">
+                        <p className="text-base md:text-lg text-slate-400 max-w-xl leading-relaxed">
                             You're currently focusing on <span className="text-primary font-bold">{user?.goal || 'General Fitness'}</span>.
-                            Ready to push your limits today?
+                            You have completed <span className="text-white font-bold">{sessions.length}</span> workouts this week. Keep the momentum going!
                         </p>
                         <div className="flex flex-wrap gap-4 pt-4">
-                            <div className="flex items-center gap-2 px-4 py-2 bg-slate-800/80 rounded-full border border-white/5 text-sm font-bold">
-                                <Zap className="text-yellow-500" size={16} />
+                            <div className="flex items-center gap-2 px-5 py-3 bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 text-sm font-bold hover:bg-white/10 transition-colors">
+                                <Zap className="text-yellow-500" size={18} />
                                 <span>{user?.level?.toUpperCase()} LEVEL</span>
                             </div>
-                            <div className="flex items-center gap-2 px-4 py-2 bg-slate-800/80 rounded-full border border-white/5 text-sm font-bold">
-                                <Target className="text-primary" size={16} />
+                            <div className="flex items-center gap-2 px-5 py-3 bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 text-sm font-bold hover:bg-white/10 transition-colors">
+                                <Target className="text-primary" size={18} />
                                 <span>{totalWorkoutTime} MINS TOTAL</span>
                             </div>
                         </div>
@@ -98,32 +101,47 @@ const Dashboard = () => {
                     <motion.div
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        className="mt-8 md:mt-0 glass-card p-6 border-primary/20 bg-primary/5 min-w-[280px]"
+                        className="mt-12 lg:mt-0 shrink-0"
                     >
-                        <div className="flex justify-between items-start mb-6">
-                            <div className="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center shadow-lg shadow-primary/20">
-                                <Trophy size={24} className="text-white" />
+                        <div className="glass-card p-8 border-primary/30 bg-primary/10 min-w-[320px] shadow-2xl shadow-primary/20 relative group">
+                            <div className="absolute -top-4 -right-4 w-12 h-12 bg-accent rounded-full blur-xl opacity-50 group-hover:opacity-80 transition-opacity" />
+                            <div className="flex justify-between items-start mb-8">
+                                <div className="w-14 h-14 rounded-2xl bg-primary flex items-center justify-center shadow-xl shadow-primary/30">
+                                    <Trophy size={28} className="text-white" />
+                                </div>
+                                <div className="text-right">
+                                    <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Weekly Rank</p>
+                                    <p className="text-3xl font-black text-white">#5</p>
+                                </div>
                             </div>
-                            <div className="text-right">
-                                <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Global Rank</p>
-                                <p className="text-2xl font-black text-white">#5</p>
+                            <div className="space-y-2">
+                                <p className="text-xs font-bold text-slate-400 uppercase tracking-tighter">Community Experience</p>
+                                <div className="flex items-end gap-2">
+                                    <span className="text-4xl font-black text-primary leading-none">{user?.points || 0}</span>
+                                    <span className="text-xs text-slate-500 font-bold mb-1">EXP</span>
+                                </div>
+                                <div className="w-full h-1.5 bg-slate-800 rounded-full mt-4 overflow-hidden">
+                                    <motion.div
+                                        initial={{ width: 0 }}
+                                        animate={{ width: '65%' }}
+                                        className="h-full bg-primary"
+                                    />
+                                </div>
                             </div>
-                        </div>
-                        <div className="space-y-1">
-                            <p className="text-xs font-bold text-slate-400 uppercase">Community Points</p>
-                            <div className="flex items-end gap-2">
-                                <span className="text-3xl font-black text-primary">{user?.points || 0}</span>
-                                <span className="text-[10px] text-slate-500 font-bold mb-1">PTS</span>
-                            </div>
-                        </div>
-                        <div className="mt-6 pt-6 border-t border-white/5 flex gap-4">
-                            <div>
-                                <p className="text-[10px] font-bold text-slate-500 uppercase">Workouts</p>
-                                <p className="text-sm font-bold">{sessions.length}</p>
-                            </div>
-                            <div>
-                                <p className="text-[10px] font-bold text-slate-500 uppercase">Calories</p>
-                                <p className="text-sm font-bold">{totalCalories}</p>
+                            <div className="mt-8 pt-8 border-t border-white/10 flex items-center justify-between">
+                                <div className="flex gap-6">
+                                    <div>
+                                        <p className="text-[10px] font-bold text-slate-500 uppercase mb-1">Workouts</p>
+                                        <p className="text-lg font-black">{sessions.length}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-[10px] font-bold text-slate-500 uppercase mb-1">Calories</p>
+                                        <p className="text-lg font-black">{totalCalories}</p>
+                                    </div>
+                                </div>
+                                <div className="p-3 bg-white/5 rounded-xl text-slate-400">
+                                    <TrendingUp size={20} />
+                                </div>
                             </div>
                         </div>
                     </motion.div>
