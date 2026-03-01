@@ -122,8 +122,8 @@ const Tracker = () => {
                     <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
                         <Trophy className="text-yellow-500" /> Focus Distribution
                     </h3>
-                    <div className="flex items-center justify-between">
-                        <div className="h-64 w-1/2">
+                    <div className="flex flex-col sm:flex-row items-center justify-between gap-8">
+                        <div className="h-64 w-full sm:w-1/2">
                             <ResponsiveContainer width="100%" height="100%">
                                 <PieChart>
                                     <Pie
@@ -141,7 +141,7 @@ const Tracker = () => {
                                 </PieChart>
                             </ResponsiveContainer>
                         </div>
-                        <div className="w-1/2 space-y-4">
+                        <div className="w-full sm:w-1/2 space-y-4">
                             {muscleData.map((item) => (
                                 <div key={item.name} className="flex items-center justify-between">
                                     <div className="flex items-center gap-3">

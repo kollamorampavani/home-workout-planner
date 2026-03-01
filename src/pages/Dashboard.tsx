@@ -66,7 +66,7 @@ const Dashboard = () => {
     return (
         <div className="space-y-10 pb-10">
             {/* Personalized Hero */}
-            <header className="relative py-10 px-8 rounded-[2rem] overflow-hidden bg-gradient-to-br from-slate-900 via-slate-900 to-primary/20 border border-white/5 shadow-2xl">
+            <header className="relative py-6 md:py-10 px-4 md:px-8 rounded-2xl md:rounded-[2rem] overflow-hidden bg-gradient-to-br from-slate-900 via-slate-900 to-primary/20 border border-white/5 shadow-2xl">
                 <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-[100px] -mr-48 -mt-48" />
                 <div className="absolute bottom-0 left-0 w-64 h-64 bg-accent/10 rounded-full blur-[80px] -ml-32 -mb-32" />
 
@@ -76,10 +76,10 @@ const Dashboard = () => {
                         animate={{ opacity: 1, x: 0 }}
                         className="space-y-4"
                     >
-                        <h1 className="text-3xl md:text-4xl font-black text-white">
+                        <h1 className="text-2xl md:text-3xl lg:text-4xl font-black text-white leading-tight">
                             {greeting}, <span className="gradient-text">{user?.name?.split(' ')[0]}</span>! 👋
                         </h1>
-                        <p className="text-lg text-slate-400 max-w-lg leading-relaxed">
+                        <p className="text-base md:text-lg text-slate-400 max-w-lg leading-relaxed">
                             You're currently focusing on <span className="text-primary font-bold">{user?.goal || 'General Fitness'}</span>.
                             Ready to push your limits today?
                         </p>
@@ -140,8 +140,8 @@ const Dashboard = () => {
                         <Link to="/schedule" className="text-sm font-bold text-primary hover:underline">View Schedule</Link>
                     </div>
 
-                    <div className="group relative glass-card p-0 overflow-hidden border-white/10 hover:border-primary/50 transition-all duration-500 min-h-[300px] flex flex-col md:flex-row">
-                        <div className="md:w-1/2 p-8 flex flex-col justify-between">
+                    <div className="group relative glass-card p-0 overflow-hidden border-white/10 hover:border-primary/50 transition-all duration-500 min-h-[300px] flex flex-col sm:flex-row">
+                        <div className="sm:w-1/2 p-6 md:p-8 flex flex-col justify-between">
                             <div>
                                 <span className="px-3 py-1 bg-primary/20 text-primary text-[10px] font-black uppercase rounded-full tracking-tighter">
                                     Next for you
@@ -165,7 +165,7 @@ const Dashboard = () => {
                                 START SESSION
                             </Link>
                         </div>
-                        <div className="md:w-1/2 bg-slate-800/50 relative overflow-hidden flex items-center justify-center p-8 border-l border-white/5">
+                        <div className="sm:w-1/2 bg-slate-800/50 relative overflow-hidden flex items-center justify-center p-8 border-l border-white/5">
                             <Dumbbell size={120} className="text-slate-700/30 -rotate-12 absolute scale-150" />
                             <div className="relative z-10 text-center space-y-4">
                                 <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">Target Focus</p>

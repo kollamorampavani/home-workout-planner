@@ -5,7 +5,6 @@ This project demonstrates frontend–backend integration, complex state manageme
 
 🚀 **Live Demo**
 - **Frontend (Netlify):** [https://effervescent-moonbeam-e557d6.netlify.app/](https://effervescent-moonbeam-e557d6.netlify.app/)
-- **Backend (Render):** [https://home-workout-backend.onrender.com/](https://home-workout-backend.onrender.com/)
 
 ✨ **Features**
 - **Personalized Onboarding:** Users set their name, fitness goals (Strength, Fat Loss, Flexibility), and available workout time.
@@ -113,7 +112,7 @@ node app.js
 
 🌍 **Deployment**
 - **Frontend:** Hosted on **Netlify** — [https://effervescent-moonbeam-e557d6.netlify.app/](https://effervescent-moonbeam-e557d6.netlify.app/)
-- **Backend:** Hosted on **Render** — [https://home-workout-backend.onrender.com/](https://home-workout-backend.onrender.com/)
+
 - **Database:** Managed by **Supabase**.
 
 📈 **Design Highlights**
