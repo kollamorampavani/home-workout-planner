@@ -21,6 +21,7 @@ interface WorkoutSession {
   caloriesBurned: number;
   completed: boolean;
   routine_name?: string;
+  difficultyFeedback?: 'easy' | 'perfect' | 'hard';
 }
 
 interface MealEntry {
@@ -184,7 +185,8 @@ export const useStore = create<AppState>()(
           await api.post('/workouts/complete', {
             routine_id: session.workoutId,
             duration_mins: session.duration,
-            calories_burned: session.caloriesBurned
+            calories_burned: session.caloriesBurned,
+            feedback: session.difficultyFeedback
           });
           get().fetchHistory(); // Refresh history
         } catch (error) {

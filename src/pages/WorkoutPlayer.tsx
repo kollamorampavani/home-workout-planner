@@ -14,7 +14,9 @@ import {
     Trophy,
     ArrowRight,
     Video,
-    RefreshCcw
+    RefreshCcw,
+    Heart,
+    Bluetooth
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
@@ -31,6 +33,9 @@ const WorkoutPlayer = () => {
     const [timeLeft, setTimeLeft] = useState(0);
     const [isActive, setIsActive] = useState(false);
     const [completed, setCompleted] = useState(false);
+    const [feedback, setFeedback] = useState<'easy' | 'perfect' | 'hard' | null>(null);
+    const [heartRate, setHeartRate] = useState(72);
+    const [isDeviceConnected, setIsDeviceConnected] = useState(false);
 
     const currentExercise = workoutExercises?.[currentIndex];
 
@@ -55,6 +60,24 @@ const WorkoutPlayer = () => {
         return () => clearInterval(interval);
     }, [isActive, timeLeft, currentExercise]);
 
+    useEffect(() => {
+        let hrInterval: any;
+        if (isDeviceConnected && isActive) {
+            hrInterval = setInterval(() => {
+                setHeartRate(prev => {
+                    const change = isActive ? (Math.floor(Math.random() * 8) - 2) : (Math.floor(Math.random() * 3) - 3);
+                    const newHr = prev + change;
+                    return Math.min(Math.max(newHr, 60), 180);
+                });
+            }, 2000);
+        } else if (!isActive && isDeviceConnected) {
+            hrInterval = setInterval(() => {
+                setHeartRate(prev => Math.max(65, prev - 1));
+            }, 3000);
+        }
+        return () => clearInterval(hrInterval);
+    }, [isDeviceConnected, isActive]);
+
     const handleNext = () => {
         if (currentIndex < workoutExercises.length - 1) {
             setCurrentIndex(currentIndex + 1);
@@ -64,14 +87,17 @@ const WorkoutPlayer = () => {
         }
     };
 
-    const handleFinish = async () => {
+    const handleFinish = async (difficulty?: 'easy' | 'perfect' | 'hard') => {
         setCompleted(true);
+        const feedbackValue = difficulty || feedback || 'perfect';
         await addSession({
             workoutId: routine?.id || 'manual',
             duration: routine?.duration || 20,
             caloriesBurned: 150 + Math.floor(Math.random() * 100),
-            completed: true
+            completed: true,
+            difficultyFeedback: feedbackValue
         });
+        toast.success(`Adaptive Intensity: ${feedbackValue === 'hard' ? 'Ease up slightly next time.' : feedbackValue === 'easy' ? 'Leveling you up next time!' : 'Perfect pace maintained!'}`);
     };
 
     if (!routine || !currentExercise) return <div>Workout not found</div>;
@@ -98,6 +124,21 @@ const WorkoutPlayer = () => {
                         <div className="bg-slate-800 p-4 rounded-xl">
                             <p className="text-xs text-slate-400 uppercase font-bold">Time</p>
                             <p className="text-2xl font-bold">{routine.duration}m</p>
+                        </div>
+                    </div>
+
+                    <div className="mb-8">
+                        <p className="text-sm font-bold text-slate-400 uppercase mb-4">How was the intensity?</p>
+                        <div className="grid grid-cols-3 gap-3">
+                            {(['easy', 'perfect', 'hard'] as const).map(lev => (
+                                <button
+                                    key={lev}
+                                    onClick={() => setFeedback(lev)}
+                                    className={`py-3 rounded-xl border font-bold capitalize transition-all ${feedback === lev ? 'bg-primary border-primary text-white shadow-lg' : 'bg-slate-800 border-white/5 text-slate-400'}`}
+                                >
+                                    {lev}
+                                </button>
+                            ))}
                         </div>
                     </div>
 
@@ -135,7 +176,23 @@ const WorkoutPlayer = () => {
                     <p className="text-xs text-slate-400 uppercase font-bold tracking-widest">Exercise {currentIndex + 1} of {workoutExercises.length}</p>
                     <h2 className="text-xl font-bold">{routine.name}</h2>
                 </div>
-                <div className="w-20" /> {/* Spacer */}
+                <div className="flex items-center gap-4">
+                    {isDeviceConnected ? (
+                        <div className="flex items-center gap-2 bg-danger/10 text-danger px-4 py-2 rounded-full border border-danger/20 animate-pulse">
+                            <Heart size={16} fill="currentColor" />
+                            <span className="font-black tabular-nums">{heartRate} BPM</span>
+                        </div>
+                    ) : (
+                        <button
+                            onClick={() => { setIsDeviceConnected(true); toast.success('Smartwatch Connected!'); }}
+                            className="flex items-center gap-2 bg-slate-800 text-slate-400 px-4 py-2 rounded-full border border-white/5 hover:text-white transition-colors"
+                        >
+                            <Bluetooth size={16} />
+                            <span className="text-xs font-bold">Sync Tracker</span>
+                        </button>
+                    )}
+                    <div className="w-20" /> {/* Spacer */}
+                </div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

@@ -14,7 +14,9 @@ import {
     Zap,
     Plus,
     Star,
-    Users
+    Users,
+    Watch,
+    Bluetooth
 } from 'lucide-react';
 import {
     AreaChart,
@@ -271,6 +273,25 @@ const Dashboard = () => {
                                     "Your body can stand almost anything. It’s your mind that you have to convince."
                                 </p>
                             </div>
+                        </div>
+                    </div>
+
+                    <div className="glass-card bg-slate-900/50 border-white/5">
+                        <div className="flex justify-between items-center mb-4">
+                            <p className="text-xs font-bold text-slate-500 uppercase">Device Connectivity</p>
+                            <Watch size={16} className="text-primary" />
+                        </div>
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                                <div className="p-2 bg-primary/10 rounded-lg">
+                                    <Bluetooth size={18} className="text-primary" />
+                                </div>
+                                <div>
+                                    <p className="text-sm font-bold">Smartwatch</p>
+                                    <p className="text-[10px] text-success font-medium">Auto-sync active</p>
+                                </div>
+                            </div>
+                            <div className="w-2 h-2 rounded-full bg-success shadow-[0_0_8px_rgba(34,197,94,0.6)]" />
                         </div>
                     </div>
 

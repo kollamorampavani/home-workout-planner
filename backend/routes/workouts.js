@@ -42,16 +42,33 @@ router.get('/routines/:id', auth, async (req, res) => {
 });
 
 // @route   POST api/workouts/complete
-// @desc    Record a completed workout
+// @desc    Record a completed workout with feedback
 router.post('/complete', auth, async (req, res) => {
-    const { routine_id, duration_mins, calories_burned } = req.body;
+    const { routine_id, duration_mins, calories_burned, feedback } = req.body;
 
     try {
-        const result = await db.query(
+        // 1. Record history
+        const historyResult = await db.query(
             'INSERT INTO workout_history (user_id, routine_id, duration_mins, calories_burned) VALUES ($1, $2, $3, $4) RETURNING id',
             [req.user.id, routine_id, duration_mins, calories_burned]
         );
-        res.json({ id: result.rows[0].id, message: 'Workout recorded' });
+
+        // 2. Adaptive Logic: Update points based on feedback
+        let pointsToAdd = 100; // Base completion points
+        if (feedback === 'hard') pointsToAdd += 50;
+        if (feedback === 'easy') pointsToAdd += 20;
+
+        await db.query(
+            'UPDATE users SET points = points + $1 WHERE id = $2',
+            [pointsToAdd, req.user.id]
+        );
+
+        res.json({
+            id: historyResult.rows[0].id,
+            message: 'Workout recorded successfully',
+            pointsEarned: pointsToAdd,
+            adaptiveTip: feedback === 'easy' ? 'Boosting your level!' : feedback === 'hard' ? 'Recovery recommended.' : 'On track!'
+        });
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server error');
