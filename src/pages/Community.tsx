@@ -5,10 +5,6 @@ import {
     Flame,
     Plus,
     X,
-    Heart,
-    MessageCircle,
-    Share2,
-    Users,
     CheckCircle
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
