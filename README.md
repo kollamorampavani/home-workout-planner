@@ -4,7 +4,7 @@ A premium, fully responsive fitness management dashboard built using React.js, T
 This project demonstrates frontend–backend integration, complex state management, data visualization with charts, and a high-end glassmorphism design system.
 
 🚀 **Live Demo**
-- **Frontend (Netlify):** [https://effervescent-moonbeam-e557d6.netlify.app/](https://effervescent-moonbeam-e557d6.netlify.app/)
+- **Frontend (Vercel):** [https://home-workout-planner-navy.vercel.app](https://home-workout-planner-navy.vercel.app)
 
 ✨ **Features**
 - **Personalized Onboarding:** Users set their name, fitness goals (Strength, Fat Loss, Flexibility), and available workout time.
@@ -111,7 +111,7 @@ node app.js
 ```
 
 🌍 **Deployment**
-- **Frontend:** Hosted on **Netlify** — [https://effervescent-moonbeam-e557d6.netlify.app/](https://effervescent-moonbeam-e557d6.netlify.app/)
+- **Frontend:** Hosted on **Vercel** — [https://home-workout-planner-navy.vercel.app](https://home-workout-planner-navy.vercel.app)
 
 - **Database:** Managed by **Supabase**.
 
