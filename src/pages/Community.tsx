@@ -61,10 +61,7 @@ const Community = () => {
     const joinedChallenges = challenges.filter(c => c.joined);
     const availableChallenges = challenges.filter(c => !c.joined);
 
-    const [posts, setPosts] = useState([
-        { id: 1, user: 'User_1', content: 'Just completed "Bodyweight Blast" in 14 minutes! New personal record! 🔥', likes: 24, comments: 3, liked: false, time: '2h ago' },
-        { id: 2, user: 'User_2', content: 'Tried the new HIIT routine. My legs are officially jelly. Worth it though! 🦵✨', likes: 18, comments: 5, liked: true, time: '4h ago' },
-    ]);
+
 
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const [newChallenge, setNewChallenge] = useState({ title: '', type: 'Strength', activities: [] as string[] });
@@ -117,11 +114,7 @@ const Community = () => {
         updatePoints(25);
     };
 
-    const handleLike = (id: number) => {
-        setPosts(prev => prev.map(p =>
-            p.id === id ? { ...p, liked: !p.liked, likes: p.liked ? p.likes - 1 : p.likes + 1 } : p
-        ));
-    };
+
 
     const handleCreateChallenge = (e: React.FormEvent) => {
         e.preventDefault();
@@ -316,51 +309,6 @@ const Community = () => {
                         </div>
                     </div>
 
-                    {/* Social Feed */}
-                    <div className="glass-card">
-                        <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
-                            <Users className="text-accent" size={24} /> Recent Activity
-                        </h3>
-                        <div className="space-y-6">
-                            {posts.map(post => (
-                                <motion.div
-                                    initial={{ opacity: 0, x: -20 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    key={post.id}
-                                    className="flex gap-4 p-5 bg-slate-800/20 rounded-2xl hover:bg-slate-800/30 transition-all border border-transparent hover:border-white/5"
-                                >
-                                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-slate-700 to-slate-800 shrink-0 flex items-center justify-center font-bold text-slate-400 border border-white/5">
-                                        {post.user.charAt(post.user.length - 1)}
-                                    </div>
-                                    <div className="flex-1">
-                                        <div className="flex justify-between items-start">
-                                            <div>
-                                                <h4 className="font-bold text-sm hover:text-primary cursor-pointer transition-colors">{post.user}</h4>
-                                                <span className="text-[10px] text-slate-500 font-bold uppercase">{post.time}</span>
-                                            </div>
-                                            <button className="text-slate-600 hover:text-white transition-colors">
-                                                <Share2 size={16} />
-                                            </button>
-                                        </div>
-                                        <p className="text-sm text-slate-300 mt-2 leading-relaxed">{post.content}</p>
-                                        <div className="flex gap-6 mt-4 text-xs font-bold">
-                                            <button
-                                                onClick={() => handleLike(post.id)}
-                                                className={`flex items-center gap-1.5 transition-colors ${post.liked ? 'text-primary' : 'text-slate-500 hover:text-primary'}`}
-                                            >
-                                                <Heart size={16} fill={post.liked ? "currentColor" : "none"} />
-                                                {post.likes}
-                                            </button>
-                                            <button className="flex items-center gap-1.5 text-slate-500 hover:text-accent transition-colors">
-                                                <MessageCircle size={16} />
-                                                {post.comments}
-                                            </button>
-                                        </div>
-                                    </div>
-                                </motion.div>
-                            ))}
-                        </div>
-                    </div>
                 </div>
 
                 {/* Sidebar */}
