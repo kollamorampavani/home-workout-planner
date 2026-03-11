@@ -1,4 +1,5 @@
-import { useEffect, useMemo } from 'react';
+import { motion } from 'framer-motion';
+import { useState, useEffect, useMemo } from 'react';
 import { useStore } from '../store/useStore';
 import { routines } from '../data/workouts';
 import { Link } from 'react-router-dom';
@@ -14,19 +15,21 @@ import {
     Zap,
     Plus,
     Star,
-    Users,
     Watch,
-    Bluetooth
+    Bluetooth,
+    Settings,
+    Bell
 } from 'lucide-react';
 import {
     AreaChart,
     Area,
     ResponsiveContainer
 } from 'recharts';
-import { motion } from 'framer-motion';
+import { toast } from 'react-hot-toast';
 
 const Dashboard = () => {
     const { user, sessions, enrolledWorkouts, fetchProfile, fetchHistory, fetchEnrolled, isLoading } = useStore();
+    const [isWatchConnected, setIsWatchConnected] = useState(true);
 
     useEffect(() => {
         fetchProfile();
@@ -52,6 +55,43 @@ const Dashboard = () => {
         calories: Number(s.caloriesBurned) || 0
     }));
 
+    const streak = useMemo(() => {
+        if (!sessions || sessions.length === 0) return 0;
+        const sortedDates = [...new Set(sessions.map(s => new Date(s.date).toDateString()))]
+            .map(d => new Date(d))
+            .sort((a, b) => b.getTime() - a.getTime());
+
+        let currentStreak = 0;
+        let today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        let checkDate = new Date(sortedDates[0]);
+        checkDate.setHours(0, 0, 0, 0);
+
+        // If last workout was more than 1 day ago, streak is 0
+        const diffDays = Math.floor((today.getTime() - checkDate.getTime()) / (1000 * 60 * 60 * 24));
+        if (diffDays > 1) return 0;
+
+        for (let i = 0; i < sortedDates.length; i++) {
+            const date = new Date(sortedDates[i]);
+            date.setHours(0, 0, 0, 0);
+            
+            if (i === 0) {
+                currentStreak = 1;
+            } else {
+                const prevDate = new Date(sortedDates[i - 1]);
+                prevDate.setHours(0, 0, 0, 0);
+                const diff = (prevDate.getTime() - date.getTime()) / (1000 * 60 * 60 * 24);
+                if (diff === 1) {
+                    currentStreak++;
+                } else {
+                    break;
+                }
+            }
+        }
+        return currentStreak;
+    }, [sessions]);
+
     if (isLoading && !user) {
         return (
             <div className="flex items-center justify-center min-h-[60vh]">
@@ -66,9 +106,29 @@ const Dashboard = () => {
     return (
         <div className="space-y-10 pb-10">
             {/* Personalized Hero */}
-            <header className="relative py-6 md:py-10 px-4 md:px-8 rounded-2xl md:rounded-[2rem] overflow-hidden bg-gradient-to-br from-slate-900 via-slate-900 to-primary/20 border border-white/5 shadow-2xl">
-                <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-[100px] -mr-48 -mt-48" />
-                <div className="absolute bottom-0 left-0 w-64 h-64 bg-accent/10 rounded-full blur-[80px] -ml-32 -mb-32" />
+            <header className="relative pt-6 pb-10 md:pt-10 md:pb-16 px-4 md:px-8 rounded-2xl md:rounded-[2rem] overflow-hidden bg-gradient-to-br from-slate-900 via-slate-900 to-primary/20 border border-white/5 shadow-2xl">
+                <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-[120px] -mr-48 -mt-48" />
+                
+                <div className="relative z-20 flex justify-between items-center mb-12 -mt-2 lg:mt-0">
+                    <div className="lg:hidden">
+                        <h1 className="text-xl font-black gradient-text tracking-tighter m-0">FitVibe</h1>
+                    </div>
+                    <div className="flex-1 lg:hidden" />
+                    <div className="flex items-center gap-3">
+                         <button 
+                            onClick={() => toast.success('No new notifications')}
+                            className="p-3 bg-white/5 hover:bg-white/10 rounded-2xl text-slate-400 hover:text-white transition-all border border-white/10"
+                        >
+                            <Bell size={18} />
+                        </button>
+                        <button 
+                            onClick={() => toast.success('Opening settings...')}
+                            className="p-3 bg-white/5 hover:bg-white/10 rounded-2xl text-slate-400 hover:text-white transition-all border border-white/10"
+                        >
+                            <Settings size={18} />
+                        </button>
+                    </div>
+                </div>
 
                 <div className="relative z-10 lg:flex items-center gap-12 lg:gap-20">
                     <motion.div
@@ -104,7 +164,6 @@ const Dashboard = () => {
                         className="mt-12 lg:mt-0 shrink-0"
                     >
                         <div className="glass-card p-8 border-primary/30 bg-primary/10 min-w-[320px] shadow-2xl shadow-primary/20 relative group">
-                            <div className="absolute -top-4 -right-4 w-12 h-12 bg-accent rounded-full blur-xl opacity-50 group-hover:opacity-80 transition-opacity" />
                             <div className="flex justify-between items-start mb-8">
                                 <div className="w-14 h-14 rounded-2xl bg-primary flex items-center justify-center shadow-xl shadow-primary/30">
                                     <Trophy size={28} className="text-white" />
@@ -273,59 +332,37 @@ const Dashboard = () => {
                                 </div>
                                 <div>
                                     <p className="text-xs font-bold text-slate-500 uppercase">Streak</p>
-                                    <p className="text-lg font-black tracking-tighter">🔥 5 DAYS</p>
+                                    <p className="text-lg font-black tracking-tighter">🔥 {streak} {streak === 1 ? 'DAY' : 'DAYS'}</p>
                                 </div>
                             </div>
                             <Link to="/tracker" className="p-2 hover:bg-slate-800 rounded-lg"><ChevronRight /></Link>
                         </div>
                     </div>
 
-                    <div className="glass-card border-orange-500/20 bg-orange-500/5 relative overflow-hidden">
-                        <div className="relative z-10 flex items-center gap-4">
-                            <div className="w-12 h-12 bg-orange-500 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-orange-500/30">
-                                <Star fill="white" size={20} />
-                            </div>
-                            <div>
-                                <h4 className="font-bold">Pro Tip</h4>
-                                <p className="text-xs text-slate-400 mt-1 italic">
-                                    "Your body can stand almost anything. It’s your mind that you have to convince."
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="glass-card bg-slate-900/50 border-white/5">
+                    <div className="glass-card bg-slate-900/50 border-white/5 cursor-pointer hover:border-primary/30 transition-all"
+                        onClick={() => {
+                            setIsWatchConnected(!isWatchConnected);
+                            toast.success(isWatchConnected ? 'Smartwatch disconnected' : 'Smartwatch connected');
+                        }}>
                         <div className="flex justify-between items-center mb-4">
                             <p className="text-xs font-bold text-slate-500 uppercase">Device Connectivity</p>
-                            <Watch size={16} className="text-primary" />
+                            <Watch size={16} className={isWatchConnected ? "text-primary animate-pulse" : "text-slate-600"} />
                         </div>
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
-                                <div className="p-2 bg-primary/10 rounded-lg">
-                                    <Bluetooth size={18} className="text-primary" />
+                                <div className={`p-2 rounded-lg ${isWatchConnected ? 'bg-primary/10' : 'bg-slate-800'}`}>
+                                    <Bluetooth size={18} className={isWatchConnected ? "text-primary" : "text-slate-600"} />
                                 </div>
-                                <div>
+                                <div className="transition-all">
                                     <p className="text-sm font-bold">Smartwatch</p>
-                                    <p className="text-[10px] text-success font-medium">Auto-sync active</p>
+                                    <p className={`text-[10px] font-medium ${isWatchConnected ? 'text-success' : 'text-slate-500'}`}>
+                                        {isWatchConnected ? 'Auto-sync active' : 'Disconnected'}
+                                    </p>
                                 </div>
                             </div>
-                            <div className="w-2 h-2 rounded-full bg-success shadow-[0_0_8px_rgba(34,197,94,0.6)]" />
+                            <div className={`w-2.5 h-2.5 rounded-full transition-all duration-500 ${isWatchConnected ? 'bg-success shadow-[0_0_12px_rgba(34,197,94,0.8)] animate-pulse' : 'bg-slate-700'}`} />
                         </div>
                     </div>
-
-                    <Link to="/community" className="glass-card group hover:border-primary/50 transition-colors block">
-                        <div className="flex items-center justify-between mb-4">
-                            <p className="text-xs font-bold text-slate-500 uppercase">Community Pulse</p>
-                            <Users size={16} className="text-slate-400" />
-                        </div>
-                        <div className="flex -space-x-3 mb-4">
-                            {[1, 2, 3, 4].map(i => (
-                                <div key={i} className="w-8 h-8 rounded-full border-2 border-[#0f172a] bg-slate-700 flex items-center justify-center text-[10px] font-bold">U{i}</div>
-                            ))}
-                            <div className="w-8 h-8 rounded-full border-2 border-[#0f172a] bg-primary flex items-center justify-center text-[10px] font-bold">+2k</div>
-                        </div>
-                        <p className="text-sm font-medium text-slate-300">Alex just completed a 500pt challenge!</p>
-                    </Link>
                 </div>
             </div>
         </div >

@@ -141,8 +141,9 @@ const MainLayout = () => {
             </aside>
 
             {/* Main Content */}
-            <main className="flex-1 lg:ml-64 p-4 md:p-8 w-full max-w-full overflow-x-hidden">
-                <header className="flex justify-between items-center mb-8 h-16 pt-2 lg:pt-0">
+            <main className="flex-1 lg:ml-64 p-4 md:p-8 w-full max-w-full overflow-x-hidden min-h-screen">
+                {location.pathname !== '/' && (
+                    <header className="flex justify-between items-center mb-8 h-16 pt-2 lg:pt-0">
                     <div className="pl-16 lg:pl-0">
                         {location.pathname !== '/' ? (
                             <>
@@ -163,14 +164,25 @@ const MainLayout = () => {
                             <span className="text-xs md:text-sm font-bold text-white leading-none mb-1">{user?.name}</span>
                             <span className="text-[8px] md:text-[10px] font-black text-primary uppercase tracking-tighter">Elite Member</span>
                         </div>
-                        <button className="p-2 md:p-3 bg-slate-800/50 hover:bg-slate-800 rounded-xl md:rounded-2xl text-slate-400 hover:text-white transition-all border border-white/5">
+                        <button 
+                            onClick={() => {
+                                import('react-hot-toast').then(t => t.toast.success('No new notifications'));
+                            }}
+                            className="p-2 md:p-3 bg-slate-800/50 hover:bg-slate-800 rounded-xl md:rounded-2xl text-slate-400 hover:text-white transition-all border border-white/5"
+                        >
                             <Bell size={18} />
                         </button>
-                        <button className="p-2 md:p-3 bg-slate-800/50 hover:bg-slate-800 rounded-xl md:rounded-2xl text-slate-400 hover:text-white transition-all border border-white/5">
+                        <button 
+                            onClick={() => {
+                                import('react-hot-toast').then(t => t.toast.success('Opening system settings...'));
+                            }}
+                            className="p-2 md:p-3 bg-slate-800/50 hover:bg-slate-800 rounded-xl md:rounded-2xl text-slate-400 hover:text-white transition-all border border-white/5"
+                        >
                             <Settings size={18} />
                         </button>
                     </div>
                 </header>
+                )}
 
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
