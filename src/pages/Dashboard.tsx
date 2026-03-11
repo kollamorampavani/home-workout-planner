@@ -16,9 +16,7 @@ import {
     Plus,
     Star,
     Watch,
-    Bluetooth,
-    Settings,
-    Bell
+    Bluetooth
 } from 'lucide-react';
 import {
     AreaChart,
@@ -114,20 +112,6 @@ const Dashboard = () => {
                         <h1 className="text-xl font-black gradient-text tracking-tighter m-0">FitVibe</h1>
                     </div>
                     <div className="flex-1 lg:hidden" />
-                    <div className="flex items-center gap-3">
-                         <button 
-                            onClick={() => toast.success('No new notifications')}
-                            className="p-3 bg-white/5 hover:bg-white/10 rounded-2xl text-slate-400 hover:text-white transition-all border border-white/10"
-                        >
-                            <Bell size={18} />
-                        </button>
-                        <button 
-                            onClick={() => toast.success('Opening settings...')}
-                            className="p-3 bg-white/5 hover:bg-white/10 rounded-2xl text-slate-400 hover:text-white transition-all border border-white/10"
-                        >
-                            <Settings size={18} />
-                        </button>
-                    </div>
                 </div>
 
                 <div className="relative z-10 lg:flex items-center gap-12 lg:gap-20">

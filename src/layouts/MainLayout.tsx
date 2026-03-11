@@ -7,8 +7,6 @@ import {
     Utensils,
     Users,
     LogOut,
-    Bell,
-    Settings,
     Calendar,
     Heart,
     Menu,
@@ -164,22 +162,6 @@ const MainLayout = () => {
                             <span className="text-xs md:text-sm font-bold text-white leading-none mb-1">{user?.name}</span>
                             <span className="text-[8px] md:text-[10px] font-black text-primary uppercase tracking-tighter">Elite Member</span>
                         </div>
-                        <button 
-                            onClick={() => {
-                                import('react-hot-toast').then(t => t.toast.success('No new notifications'));
-                            }}
-                            className="p-2 md:p-3 bg-slate-800/50 hover:bg-slate-800 rounded-xl md:rounded-2xl text-slate-400 hover:text-white transition-all border border-white/5"
-                        >
-                            <Bell size={18} />
-                        </button>
-                        <button 
-                            onClick={() => {
-                                import('react-hot-toast').then(t => t.toast.success('Opening system settings...'));
-                            }}
-                            className="p-2 md:p-3 bg-slate-800/50 hover:bg-slate-800 rounded-xl md:rounded-2xl text-slate-400 hover:text-white transition-all border border-white/5"
-                        >
-                            <Settings size={18} />
-                        </button>
                     </div>
                 </header>
                 )}
