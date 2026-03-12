@@ -15,8 +15,8 @@ import {
     ArrowRight,
     Video,
     RefreshCcw,
-    Heart,
-    Bluetooth
+//    Heart,
+//    Bluetooth
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
@@ -34,8 +34,8 @@ const WorkoutPlayer = () => {
     const [isActive, setIsActive] = useState(false);
     const [completed, setCompleted] = useState(false);
     const [feedback, setFeedback] = useState<'easy' | 'perfect' | 'hard' | null>(null);
-    const [heartRate, setHeartRate] = useState(72);
-    const [isDeviceConnected, setIsDeviceConnected] = useState(false);
+    // const [heartRate, setHeartRate] = useState(72);
+    // const [isDeviceConnected, setIsDeviceConnected] = useState(false);
 
     const currentExercise = workoutExercises?.[currentIndex];
 
@@ -60,7 +60,7 @@ const WorkoutPlayer = () => {
         return () => clearInterval(interval);
     }, [isActive, timeLeft, currentExercise]);
 
-    useEffect(() => {
+    /* useEffect(() => {
         let hrInterval: any;
         if (isDeviceConnected && isActive) {
             hrInterval = setInterval(() => {
@@ -76,7 +76,7 @@ const WorkoutPlayer = () => {
             }, 3000);
         }
         return () => clearInterval(hrInterval);
-    }, [isDeviceConnected, isActive]);
+    }, [isDeviceConnected, isActive]); */
 
     const handleNext = () => {
         if (currentIndex < workoutExercises.length - 1) {
@@ -177,7 +177,7 @@ const WorkoutPlayer = () => {
                     <h2 className="text-xl font-bold">{routine.name}</h2>
                 </div>
                 <div className="flex items-center gap-4">
-                    {isDeviceConnected ? (
+{/* {isDeviceConnected ? (
                         <div className="flex items-center gap-2 bg-danger/10 text-danger px-4 py-2 rounded-full border border-danger/20 animate-pulse">
                             <Heart size={16} fill="currentColor" />
                             <span className="font-black tabular-nums">{heartRate} BPM</span>
@@ -190,7 +190,7 @@ const WorkoutPlayer = () => {
                             <Bluetooth size={16} />
                             <span className="text-xs font-bold">Sync Tracker</span>
                         </button>
-                    )}
+                    )} */}
                     <div className="w-20" /> {/* Spacer */}
                 </div>
             </div>

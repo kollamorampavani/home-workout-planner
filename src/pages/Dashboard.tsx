@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { useState, useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useStore } from '../store/useStore';
 import { routines } from '../data/workouts';
 import { Link } from 'react-router-dom';
@@ -14,20 +14,20 @@ import {
     Target,
     Zap,
     Plus,
-    Star,
-    Watch,
-    Bluetooth
+    Star
+//    Watch,
+//    Bluetooth
 } from 'lucide-react';
 import {
     AreaChart,
     Area,
     ResponsiveContainer
 } from 'recharts';
-import { toast } from 'react-hot-toast';
+// import { toast } from 'react-hot-toast';
 
 const Dashboard = () => {
     const { user, sessions, enrolledWorkouts, fetchProfile, fetchHistory, fetchEnrolled, isLoading } = useStore();
-    const [isWatchConnected, setIsWatchConnected] = useState(true);
+
 
     useEffect(() => {
         fetchProfile();
@@ -323,7 +323,7 @@ const Dashboard = () => {
                         </div>
                     </div>
 
-                    <div className="glass-card bg-slate-900/50 border-white/5 cursor-pointer hover:border-primary/30 transition-all"
+{/* <div className="glass-card bg-slate-900/50 border-white/5 cursor-pointer hover:border-primary/30 transition-all"
                         onClick={() => {
                             setIsWatchConnected(!isWatchConnected);
                             toast.success(isWatchConnected ? 'Smartwatch disconnected' : 'Smartwatch connected');
@@ -346,7 +346,7 @@ const Dashboard = () => {
                             </div>
                             <div className={`w-2.5 h-2.5 rounded-full transition-all duration-500 ${isWatchConnected ? 'bg-success shadow-[0_0_12px_rgba(34,197,94,0.8)] animate-pulse' : 'bg-slate-700'}`} />
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </div >
